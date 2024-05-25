@@ -12,7 +12,7 @@ import { fromLonLat } from 'ol/proj';
 import {Polygon} from "ol/geom.js";
 import { loadJSON } from './json-loader.js'
 
-const imageUrl = 'map2.jpg';
+const imageUrl = 'map_highres.jpg';
 const imageExtent = [-180, -90, 180, 90];
 
 const map = new Map({
