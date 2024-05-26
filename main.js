@@ -7,24 +7,38 @@ import VectorLayer from 'ol/layer/Vector';
 import Overlay from 'ol/Overlay';
 import ImageLayer from 'ol/layer/Image';
 import ImageStatic from 'ol/source/ImageStatic';
-import GeoJSON from 'ol/format/GeoJSON';
-import { fromLonLat } from 'ol/proj';
 import {Polygon} from "ol/geom.js";
 import { loadJSON } from './json-loader.js'
 
-const imageUrl = 'map_highres.jpg';
 const imageExtent = [-180, -90, 180, 90];
+
+const imageLayer = new ImageLayer({
+  source: new ImageStatic({
+    url: 'map.jpg',
+    imageExtent: imageExtent,
+    projection: 'EPSG:4326'
+  }),
+});
+
+const imageLayerHigh = new ImageLayer({
+  source: new ImageStatic({
+    url: 'map_highres.jpg',
+    imageExtent: imageExtent,
+    projection: 'EPSG:4326'
+  }),
+});
+
+// let client load image (move operation to site-load stage)
+(async () => {
+  await new Promise(resolve => setTimeout(resolve, 250));
+  imageLayerHigh.setVisible(false);
+})();
 
 const map = new Map({
   target: 'map',
   layers: [
-    new ImageLayer({
-      source: new ImageStatic({
-        url: imageUrl,
-        imageExtent: imageExtent,
-        projection: 'EPSG:4326'
-      }),
-    })
+    imageLayer,
+    imageLayerHigh
   ],
   view: new View({
     center: [0, 0],
@@ -59,8 +73,6 @@ try {
 } catch (error) {
   console.error('Error loading JSON:', error);
 }
-
-console.log(features.length)
 
 const vectorSource = new VectorSource({
   features: features,
@@ -101,6 +113,43 @@ map.on(['click', 'pointermove'], function(event) {
       overlay.setVisible(false);
     }
   }
+});
+
+let stateZoomActive = false;
+let stateHighRes = false;
+map.on(['movestart'], function () {
+  stateZoomActive = true;
+  (async () => {
+    while (stateZoomActive) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      if (map.getView().getZoom() > 4.8) {
+        if (!stateHighRes) {
+          stateHighRes = true;
+        } else {
+          continue;
+        }
+      } else {
+        if (stateHighRes) {
+          stateHighRes = false;
+        } else {
+          continue;
+        }
+      }
+
+      console.log("Resolution update triggered to " + (stateHighRes ? "high" : "low"));
+      if (stateHighRes) {
+        imageLayer.setVisible(false);
+        imageLayerHigh.setVisible(true);
+      } else {
+        imageLayer.setVisible(true);
+        imageLayerHigh.setVisible(false);
+      }
+    }
+  })()
+});
+
+map.on(['moveend'], function () {
+  stateZoomActive = false;
 });
 
 let data = "";
