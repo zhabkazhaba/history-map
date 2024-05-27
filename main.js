@@ -50,26 +50,51 @@ try {
   const data = await loadJSON('./data.json');
   for (let i = 0; i < data.length; ++i) {
     const polyEntry = data[i];
-    const feature = new Feature({
-      geometry: new Polygon([
-        polyEntry.data
-      ])
-    });
-    feature.setId(i);
+    const zoneFeatures = [];
+    const overlays = [];
+    for (let j = 0; j < polyEntry.data.length; ++j) {
+      const feature = new Feature({
+        geometry: new Polygon([
+          polyEntry.data[j]
+        ])
+      });
+      const color = polyEntry.color.toString();
+      feature.setStyle(new Style({
+        fill: new Fill({
+          color: color + "AA"
+        }),
+        stroke: new Stroke({
+          color: color,
+          width: 1.75
+        })
+      }));
+      zoneFeatures.push(feature);
 
-    const color = polyEntry.color.toString();
-    feature.setStyle(new Style({
-      fill: new Fill({
-        color: color + "AA"
-      }),
-      stroke: new Stroke({
-        color: color,
-        width: 1.75
-      })
-    }));
+      const element = document.createElement('div');
+      element.style.backgroundColor = 'white';
+      element.style.display = 'inline-block';
+      element.style.padding = '10px';
+      element.style.border = '1px solid black';
+      element.style.borderRadius = '5px';
+      element.style.alignItems = 'center';
+      element.style.maxWidth = '300px';
+
+      const content = document.createElement('popup-' + i);
+      content.innerHTML = polyEntry.name + "<br>" + polyEntry.lore + "<br>" + "<img src='" + polyEntry.image + "' alt='image' style='width: 100px; height: 100px;'>";
+      element.appendChild(content);
+
+      const overlay = new Overlay({
+        element: element,
+        autoPan: true,
+        positioning: 'center-left',
+        offset: [20, 0],
+      });
+      map.addOverlay(overlay);
+      overlays.push(overlay);
+    }
 
     const vectorSource = new VectorSource({
-      features: [feature],
+      features: zoneFeatures
     });
 
     const vectorLayer = new VectorLayer({
@@ -78,38 +103,18 @@ try {
 
     map.addLayer(vectorLayer);
 
-    const element = document.createElement('div');
-    element.style.backgroundColor = 'white';
-    element.style.display = 'inline-block';
-    element.style.padding = '10px';
-    element.style.border = '1px solid black';
-    element.style.borderRadius = '5px';
-    element.style.alignItems = 'center';
-    element.style.maxWidth = '300px';
-
-    const content = document.createElement('popup-' + i);
-    content.innerHTML = polyEntry.name + "<br>" + polyEntry.lore + "<br>" + "<img src='" + polyEntry.image + "' alt='image' style='width: 100px; height: 100px;'>";
-    element.appendChild(content);
-
-    const overlay = new Overlay({
-      element: element,
-      autoPan: true,
-      positioning: 'center-left',
-      offset: [20, 0],
-    });
-    map.addOverlay(overlay);
-
     map.on(['click', 'pointermove'], function(event) {
       const featureAtPixel = map.forEachFeatureAtPixel(event.pixel, function(featureAtPixel) {
         return featureAtPixel;
       });
-
-      if (feature === featureAtPixel) {
-        overlay.setPosition(event.coordinate);
-        overlay.setVisible(true);
-      } else {
-        overlay.setPosition(undefined);
-        overlay.setVisible(false);
+      for (let i = 0; i < zoneFeatures.length; ++i) {
+        if (zoneFeatures[i] === featureAtPixel) {
+          overlays[i].setPosition(event.coordinate);
+          overlays[i].setVisible(true);
+        } else {
+          overlays[i].setPosition(undefined);
+          overlays[i].setVisible(false);
+        }
       }
     });
   }
