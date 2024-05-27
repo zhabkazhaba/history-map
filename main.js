@@ -66,8 +66,18 @@ try {
 
     map.addLayer(vectorLayer);
 
-    const element = document.createElement('popup-' + i);
-    element.innerHTML = polyEntry.name + "<br>" + polyEntry.lore + "<br>" + "<img src='" + polyEntry.image + "' alt='image' style='width: 100px; height: 100px;'>";
+    const element = document.createElement('div');
+    element.style.backgroundColor = 'white';
+    element.style.display = 'inline-block';
+    element.style.padding = '10px';
+    element.style.border = '1px solid black';
+    element.style.borderRadius = '5px';
+    element.style.alignItems = 'center';
+    element.style.maxWidth = '300px';
+
+    const content = document.createElement('popup-' + i);
+    content.innerHTML = polyEntry.name + "<br>" + polyEntry.lore + "<br>" + "<img src='" + polyEntry.image + "' alt='image' style='width: 100px; height: 100px;'>";
+    element.appendChild(content);
 
     const overlay = new Overlay({
       element: element,
