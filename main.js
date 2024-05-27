@@ -8,6 +8,7 @@ import ImageLayer from 'ol/layer/Image';
 import ImageStatic from 'ol/source/ImageStatic';
 import {Polygon} from "ol/geom.js";
 import {loadJSON} from './json-loader.js'
+import {Fill, Stroke, Style} from "ol/style.js";
 
 const imageExtent = [-180, -90, 180, 90];
 
@@ -55,6 +56,17 @@ try {
       ])
     });
     feature.setId(i);
+
+    const color = polyEntry.color.toString();
+    feature.setStyle(new Style({
+      fill: new Fill({
+        color: color + "AA"
+      }),
+      stroke: new Stroke({
+        color: color,
+        width: 1.75
+      })
+    }));
 
     const vectorSource = new VectorSource({
       features: [feature],
