@@ -1,14 +1,14 @@
 import './style.css';
 import {Map, View} from 'ol';
 import Feature from 'ol/Feature';
-import Point from 'ol/geom/Point';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import Overlay from 'ol/Overlay';
 import ImageLayer from 'ol/layer/Image';
 import ImageStatic from 'ol/source/ImageStatic';
 import {Polygon} from "ol/geom.js";
-import { loadJSON } from './json-loader.js'
+import {loadJSON} from './json-loader.js'
+import {Fill, Stroke, Style} from "ol/style.js";
 
 const imageExtent = [-180, -90, 180, 90];
 
@@ -28,7 +28,6 @@ const imageLayerHigh = new ImageLayer({
   }),
 });
 
-// let client load image (move operation to site-load stage)
 (async () => {
   await new Promise(resolve => setTimeout(resolve, 250));
   imageLayerHigh.setVisible(false);
@@ -47,73 +46,82 @@ const map = new Map({
   })
 });
 
-const pointFeature = new Feature({
-  geometry: new Point([-10, 10]),
-});
-
-const features = [];
-features.push(pointFeature);
-
-const subscribeFeature = [];
-subscribeFeature.push([pointFeature, ["ВСЕМ ПРИВ!!!"]]);
-
 try {
   const data = await loadJSON('./data.json');
   for (let i = 0; i < data.length; ++i) {
     const polyEntry = data[i];
-    const feature = new Feature({
-      geometry: new Polygon([
-        polyEntry.data
-      ])
-    });
-    features.push(feature);
+    const zoneFeatures = [];
+    const overlays = [];
+    for (let j = 0; j < polyEntry.data.length; ++j) {
+      const feature = new Feature({
+        geometry: new Polygon([
+          polyEntry.data[j]
+        ])
+      });
+      const color = polyEntry.color.toString();
+      feature.setStyle(new Style({
+        fill: new Fill({
+          color: color + "AA"
+        }),
+        stroke: new Stroke({
+          color: color,
+          width: 1.75
+        })
+      }));
+      zoneFeatures.push(feature);
 
-    subscribeFeature.push([feature, [polyEntry.name]]);
+      const element = document.createElement('div');
+      element.style.backgroundColor = 'white';
+      element.style.display = 'inline-block';
+      element.style.padding = '10px';
+      element.style.border = '1px solid black';
+      element.style.borderRadius = '5px';
+      element.style.alignItems = 'center';
+      element.style.maxWidth = '300px';
+
+      const content = document.createElement('popup-' + i);
+      content.innerHTML = polyEntry.name + "<br>" + polyEntry.lore + "<br>" + "<img src='" + polyEntry.image + "' " +
+          "alt='image' style='width: 100px; height: 100px; padding-top: 10px'>";
+      element.appendChild(content);
+
+      const overlay = new Overlay({
+        element: element,
+        autoPan: true,
+        positioning: 'center-left',
+        offset: [20, 0],
+      });
+      map.addOverlay(overlay);
+      overlays.push(overlay);
+    }
+
+    const vectorSource = new VectorSource({
+      features: zoneFeatures
+    });
+
+    const vectorLayer = new VectorLayer({
+      source: vectorSource,
+    });
+
+    map.addLayer(vectorLayer);
+
+    map.on(['click', 'pointermove'], function(event) {
+      const featureAtPixel = map.forEachFeatureAtPixel(event.pixel, function(featureAtPixel) {
+        return featureAtPixel;
+      });
+      for (let i = 0; i < zoneFeatures.length; ++i) {
+        if (zoneFeatures[i] === featureAtPixel) {
+          overlays[i].setPosition(event.coordinate);
+          overlays[i].setVisible(true);
+        } else {
+          overlays[i].setPosition(undefined);
+          overlays[i].setVisible(false);
+        }
+      }
+    });
   }
 } catch (error) {
   console.error('Error loading JSON:', error);
 }
-
-const vectorSource = new VectorSource({
-  features: features,
-});
-
-const vectorLayer = new VectorLayer({
-  source: vectorSource,
-});
-
-map.addLayer(vectorLayer);
-
-const overlays = [];
-for (let i = 0; i < subscribeFeature.length; i++) {
-  const element = document.createElement('popup-' + i);
-  element.innerHTML = subscribeFeature[i][1][0];
-
-  const overlay = new Overlay({
-    element: element,
-    autoPan: true
-  });
-  map.addOverlay(overlay);
-  overlays.push(overlay);
-}
-
-map.on(['click', 'pointermove'], function(event) {
-  const feature = map.forEachFeatureAtPixel(event.pixel, function(feature) {
-    return feature;
-  });
-
-  for (let i = 0; i < subscribeFeature.length; ++i) {
-    const featureSetup = subscribeFeature[i];
-    const overlay = overlays[i];
-    if (featureSetup[0] === feature) {
-      overlay.setPosition(event.coordinate);
-      overlay.setVisible(true);
-    } else {
-      overlay.setPosition(undefined);
-      overlay.setVisible(false);
-    }
-  }
-});
 
 let stateZoomActive = false;
 let stateHighRes = false;
