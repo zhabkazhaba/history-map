@@ -80,7 +80,8 @@ try {
       element.style.maxWidth = '300px';
 
       const content = document.createElement('popup-' + i);
-      content.innerHTML = polyEntry.name + "<br>" + polyEntry.lore + "<br>" + "<img src='" + polyEntry.image + "' alt='image' style='width: 100px; height: 100px;'>";
+      content.innerHTML = polyEntry.name + "<br>" + polyEntry.lore + "<br>" + "<img src='" + polyEntry.image + "' " +
+          "alt='image' style='width: 100px; height: 100px; padding-top: 10px'>";
       element.appendChild(content);
 
       const overlay = new Overlay({
