@@ -14,7 +14,7 @@ const imageExtent = [-180, -90, 180, 90];
 
 const imageLayer = new ImageLayer({
   source: new ImageStatic({
-    url: 'map.jpg',
+    url: 'map2.jpg',
     imageExtent: imageExtent,
     projection: 'EPSG:4326'
   }),
@@ -22,7 +22,7 @@ const imageLayer = new ImageLayer({
 
 const imageLayerHigh = new ImageLayer({
   source: new ImageStatic({
-    url: 'map_highres.jpg',
+    url: 'map2.jpg',
     imageExtent: imageExtent,
     projection: 'EPSG:4326'
   }),
@@ -30,7 +30,7 @@ const imageLayerHigh = new ImageLayer({
 
 const imageLayerHover = new ImageLayer({
   source: new ImageStatic({
-    url: 'map_hover.jpg',
+    url: 'map2_hover.jpg',
     imageExtent: imageExtent,
     projection: 'EPSG:4326'
   }),
