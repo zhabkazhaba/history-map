@@ -1,4 +1,4 @@
-import './style.css';
+import '../css/style.css';
 import {Map, View} from 'ol';
 import Feature from 'ol/Feature';
 import VectorSource from 'ol/source/Vector';
@@ -14,7 +14,7 @@ const imageExtent = [-180, -90, 180, 90];
 
 const imageLayer = new ImageLayer({
   source: new ImageStatic({
-    url: 'map2.jpg',
+    url: '/img/base/map2.jpg',
     imageExtent: imageExtent,
     projection: 'EPSG:4326'
   }),
@@ -22,7 +22,7 @@ const imageLayer = new ImageLayer({
 
 const imageLayerHigh = new ImageLayer({
   source: new ImageStatic({
-    url: 'map2.jpg',
+    url: '/img/base/map2.jpg',
     imageExtent: imageExtent,
     projection: 'EPSG:4326'
   }),
@@ -30,7 +30,7 @@ const imageLayerHigh = new ImageLayer({
 
 const imageLayerHover = new ImageLayer({
   source: new ImageStatic({
-    url: 'map2_hover.jpg',
+    url: '/img/base/map2_hover.jpg',
     imageExtent: imageExtent,
     projection: 'EPSG:4326'
   }),
@@ -62,7 +62,7 @@ button.style.top = '10px';
 button.style.right = '10px';
 
 try {
-  const data = await loadJSON('./data.json');
+  const data = await loadJSON('/config/data.json');
   for (let i = 0; i < data.length; ++i) {
     const polyEntry = data[i];
     const zoneFeatures = [];
@@ -95,7 +95,8 @@ try {
       element.style.maxWidth = '300px';
 
       const content = document.createElement('popup-' + i);
-      content.innerHTML = polyEntry.name + "<br>" + polyEntry.lore + "<br>" + "<img src='" + polyEntry.image + "' alt='image' style='width: 100px; height: 100px;'>";
+      content.innerHTML = polyEntry.name + "<br>" + polyEntry.lore + "<br>" + "<img src='/img/people/"
+          + polyEntry.image + "' alt='image' style='width: 100px; height: 100px;'>";
       element.appendChild(content);
 
       const overlay = new Overlay({
@@ -185,7 +186,7 @@ map.on(['click'], function (event) {
   }
   console.log(data);
 });
-let hover_state = false;
+let hover_state = true;
 button.addEventListener('click', function () {
   if (hover_state) {
     if (stateHighRes) {
