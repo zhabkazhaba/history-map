@@ -175,9 +175,28 @@ map.on(['moveend'], function () {
   stateZoomActive = false;
 });
 
+const poly = new Polygon([
+    [0, 0]
+]);
+const source = new VectorSource({
+  features: [new Feature({
+    geometry: poly
+  })],
+});
+const layer = new VectorLayer({
+  source: source,
+});
+map.addLayer(layer);
+
 let data = "";
 map.on(['click'], function (event) {
   let piece = map.getCoordinateFromPixel(event.pixel);
+
+  let coordinates = data === "" ? [] : poly.getCoordinates()[0];
+  coordinates.push(piece);
+  poly.setCoordinates([coordinates]);
+  source.changed();
+
   piece = "[" + piece[0] + ", " + piece[1] + "]";
   if (data === "") {
     data = piece;
