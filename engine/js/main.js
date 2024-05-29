@@ -92,7 +92,7 @@ try {
       element.style.border = '1px solid black';
       element.style.borderRadius = '5px';
       element.style.alignItems = 'center';
-      element.style.maxWidth = '450px';
+      element.style.maxWidth = '300px';
 
       const content = document.createElement('popup-' + i);
       content.innerHTML = polyEntry.name + "<br>" + polyEntry.lore + "<br>" + "<img src='/img/people/"
