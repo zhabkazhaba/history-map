@@ -92,7 +92,7 @@ try {
       element.style.border = '1px solid black';
       element.style.borderRadius = '5px';
       element.style.alignItems = 'center';
-      element.style.maxWidth = '300px';
+      element.style.maxWidth = '450px';
 
       const content = document.createElement('popup-' + i);
       content.innerHTML = polyEntry.name + "<br>" + polyEntry.lore + "<br>" + "<img src='/img/people/"
@@ -119,17 +119,33 @@ try {
 
     map.addLayer(vectorLayer);
 
+    let glowing = false;
     map.on(['click', 'pointermove'], function(event) {
       const featureAtPixel = map.forEachFeatureAtPixel(event.pixel, function(featureAtPixel) {
         return featureAtPixel;
       });
+
+      let glowPiece = false;
       for (let i = 0; i < zoneFeatures.length; ++i) {
         if (zoneFeatures[i] === featureAtPixel) {
           overlays[i].setPosition(event.coordinate);
           overlays[i].setVisible(true);
+          glowPiece = true;
         } else {
           overlays[i].setPosition(undefined);
           overlays[i].setVisible(false);
+        }
+      }
+
+      if (glowPiece !== glowing) {
+        glowing  = glowPiece;
+        console.log("Now glowing: " + glowing);
+        for (let zoneFeature of zoneFeatures) {
+          let stroke = zoneFeature.getStyle().getStroke();
+          stroke.setColor(glowing ? "#FFFFFF" : polyEntry.color.toString());
+          stroke.setWidth(glowing ? 2.5 : 1.75);
+          vectorLayer.setZIndex(glowing ? 1 : 0);
+          map.redrawText();
         }
       }
     });
