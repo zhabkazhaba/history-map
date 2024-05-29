@@ -119,17 +119,32 @@ try {
 
     map.addLayer(vectorLayer);
 
+    let glowing = false;
     map.on(['click', 'pointermove'], function(event) {
       const featureAtPixel = map.forEachFeatureAtPixel(event.pixel, function(featureAtPixel) {
         return featureAtPixel;
       });
+
+      let glowPiece = false;
       for (let i = 0; i < zoneFeatures.length; ++i) {
         if (zoneFeatures[i] === featureAtPixel) {
           overlays[i].setPosition(event.coordinate);
           overlays[i].setVisible(true);
+          glowPiece = true;
         } else {
           overlays[i].setPosition(undefined);
           overlays[i].setVisible(false);
+        }
+      }
+
+      if (glowPiece !== glowing) {
+        glowing  = glowPiece;
+        for (let zoneFeature of zoneFeatures) {
+          let stroke = zoneFeature.getStyle().getStroke();
+          stroke.setColor(glowing ? "#FFFFFF" : polyEntry.color.toString());
+          stroke.setWidth(glowing ? 2.5 : 1.75);
+          vectorLayer.setZIndex(glowing ? 1 : 0);
+          map.redrawText();
         }
       }
     });
