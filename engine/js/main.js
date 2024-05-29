@@ -139,7 +139,6 @@ try {
 
       if (glowPiece !== glowing) {
         glowing  = glowPiece;
-        console.log("Now glowing: " + glowing);
         for (let zoneFeature of zoneFeatures) {
           let stroke = zoneFeature.getStyle().getStroke();
           stroke.setColor(glowing ? "#FFFFFF" : polyEntry.color.toString());
