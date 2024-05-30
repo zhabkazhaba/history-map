@@ -74,17 +74,18 @@ try {
       zoneFeatures.push(feature);
 
       const element = document.createElement('div');
-      element.style.backgroundColor = 'white';
+      //set cyan
+      element.style.backgroundColor = '#E2F5F4';
       element.style.display = 'inline-block';
-      element.style.padding = '10px';
+      element.style.padding = '14px';
       element.style.border = '1px solid black';
       element.style.borderRadius = '5px';
       element.style.alignItems = 'center';
-      element.style.maxWidth = '320px';
+      element.style.maxWidth = '360px';
 
       const content = document.createElement('popup-' + i);
-      content.innerHTML = "<div class='wrapper'>" + polyEntry.name + "<br>" + polyEntry.lore + "<br>" +
-          "<div class='container'><img src='/img/people/" + polyEntry.image + "' alt='image'></div></div>";
+      content.innerHTML = "<div class='wrapper'>" + polyEntry.name + "</div><br>" + polyEntry.lore + "<br>" +
+          "<div class='container'><img src='/img/people/" + polyEntry.image + "' alt='image'></div>";
       element.appendChild(content);
 
       const overlay = new Overlay({
