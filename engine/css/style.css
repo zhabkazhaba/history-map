@@ -22,7 +22,7 @@ html, body {
     display: block;
     position: fixed;
     z-index: 1;
-    padding-top: 100px;
+    padding-top: -30px;
     left: 0;
     top: 0;
     width: 100%;
@@ -67,6 +67,26 @@ html, body {
     #name {
         font-family: monospace;
         font-size: 19px;
+    }
+}
+
+.github {
+    padding-top: 20px;
+    font-family: monospace;
+    font-size: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        max-width: 20px;
+        max-height: 20px;
+        padding-right: 5px;
+    }
+
+    a {
+        padding: 1px;
     }
 }
 
