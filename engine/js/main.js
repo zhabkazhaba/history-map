@@ -29,14 +29,6 @@ const imageLayerHigh = new ImageLayer({
   }),
 });
 
-const imageLayerHover = new ImageLayer({
-  source: new ImageStatic({
-    url: '/img/base/map2_hover.jpg',
-    imageExtent: imageExtent,
-    projection: 'EPSG:4326'
-  }),
-});
-
 (async () => {
   await new Promise(resolve => setTimeout(resolve, 250));
   imageLayerHigh.setVisible(false);
@@ -47,8 +39,7 @@ const map = new Map({
   interactions: defaultInteractions({autoPan: false}),
   layers: [
     imageLayer,
-    imageLayerHigh,
-    imageLayerHover
+    imageLayerHigh
   ],
   view: new View({
     center: [0, 0],
@@ -57,12 +48,6 @@ const map = new Map({
     extent: imageExtent
   })
 });
-
-const button = document.createElement('button');
-button.innerHTML = 'Change map image';
-button.style.position = 'absolute';
-button.style.top = '10px';
-button.style.right = '10px';
 
 try {
   const data = await loadJSON('/config/data.json');
@@ -209,57 +194,36 @@ map.on(['moveend'], function () {
   stateZoomActive = false;
 });
 
-const poly = new Polygon([
-    [0, 0]
-]);
-const source = new VectorSource({
-  features: [new Feature({
-    geometry: poly
-  })],
-});
-const layer = new VectorLayer({
-  source: source,
-});
-map.addLayer(layer);
-
-let data = "";
-map.on(['click'], function (event) {
-  let piece = map.getCoordinateFromPixel(event.pixel);
-
-  let coordinates = data === "" ? [] : poly.getCoordinates()[0];
-  coordinates.push(piece);
-  poly.setCoordinates([coordinates]);
-  source.changed();
-
-  piece = "[" + piece[0] + ", " + piece[1] + "]";
-  if (data === "") {
-    data = piece;
-  } else {
-    data = data + ",\n" + piece;
-  }
-  console.log(data);
-});
-let hover_state = true;
-button.addEventListener('click', function () {
-  if (hover_state) {
-    if (stateHighRes) {
-      imageLayerHigh.setVisible(true);
-      imageLayer.setVisible(false);
-    } else {
-      imageLayerHigh.setVisible(false);
-      imageLayer.setVisible(true);
-    }
-    imageLayerHover.setVisible(false);
-    hover_state = false;
-  } else {
-    imageLayer.setVisible(false);
-    imageLayerHigh.setVisible(false);
-    imageLayerHover.setVisible(true);
-    hover_state = true;
-  }
-});
-
-document.getElementById('map').appendChild(button);
+// const poly = new Polygon([
+//     [0, 0]
+// ]);
+// const source = new VectorSource({
+//   features: [new Feature({
+//     geometry: poly
+//   })],
+// });
+// const layer = new VectorLayer({
+//   source: source,
+// });
+// map.addLayer(layer);
+//
+// let data = "";
+// map.on(['click'], function (event) {
+//   let piece = map.getCoordinateFromPixel(event.pixel);
+//
+//   let coordinates = data === "" ? [] : poly.getCoordinates()[0];
+//   coordinates.push(piece);
+//   poly.setCoordinates([coordinates]);
+//   source.changed();
+//
+//   piece = "[" + piece[0] + ", " + piece[1] + "]";
+//   if (data === "") {
+//     data = piece;
+//   } else {
+//     data = data + ",\n" + piece;
+//   }
+//   console.log(data);
+// });
 
 var modal = document.getElementById("myModal");
 var btn = document.getElementById("okButton");
