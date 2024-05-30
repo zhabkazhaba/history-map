@@ -74,17 +74,21 @@ try {
       zoneFeatures.push(feature);
 
       const element = document.createElement('div');
-      element.style.backgroundColor = 'white';
-      element.style.display = 'inline-block';
-      element.style.padding = '10px';
+      //set cyan
+      element.style.backgroundColor = '#E2F5F4EE';
+      element.style.padding = '14px';
       element.style.border = '1px solid black';
-      element.style.borderRadius = '5px';
-      element.style.alignItems = 'center';
-      element.style.maxWidth = '300px';
+      element.style.borderRadius = '0.9em';
+      element.style.margin = "10px";
 
       const content = document.createElement('popup-' + i);
-      content.innerHTML = polyEntry.name + "<br>" + polyEntry.lore + "<br>" + "<img src='/img/people/"
-          + polyEntry.image + "' alt='image' style='width: 100px; height: 100px;'>";
+      content.style.display = 'flex';
+
+      // content.innerHTML = "<div class='wrapper'>" + polyEntry.name + "</div><br><div class='lore-wrapper'>" + polyEntry.lore + "</div><br>" +
+      //     "<div class='container'><img src='/img/people/" + polyEntry.image + "' alt='image'></div>";
+      content.innerHTML = "<div class='holder-base'><div class='name-wrapper'>" + polyEntry.name + "</div>" +
+          "<div class='container'><img src='/img/people/" + polyEntry.image + "' alt='image'></div>" +
+          "</div><div class='holder-info'><div class='lore-wrapper'>" + polyEntry.lore + "</div></div>"
       element.appendChild(content);
 
       const overlay = new Overlay({
@@ -121,6 +125,15 @@ try {
           overlays[i].setVisible(true);
           glowPiece = true;
 
+          const x = event.pixel[0];
+          let widthOffset = 0;
+          if (x > (map.getSize()[0] / 2)) {
+            widthOffset = -20;
+            overlays[i].setPositioning('center-right');
+          } else {
+            widthOffset = 20;
+            overlays[i].setPositioning('center-left');
+          }
           const y = event.pixel[1];
           const overlayHeight = overlays[i].element.offsetHeight;
           let heightOffset = 0;
@@ -132,7 +145,9 @@ try {
           } else {
             heightOffset = 0;
           }
-          overlays[i].setOffset([20, heightOffset]);
+          overlays[i].setOffset([widthOffset, heightOffset]);
+
+
         } else {
           overlays[i].setPosition(undefined);
           overlays[i].setVisible(false);
