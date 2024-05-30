@@ -75,17 +75,20 @@ try {
 
       const element = document.createElement('div');
       //set cyan
-      element.style.backgroundColor = '#E2F5F4';
-      element.style.display = 'inline-block';
+      element.style.backgroundColor = '#E2F5F4EE';
       element.style.padding = '14px';
       element.style.border = '1px solid black';
-      element.style.borderRadius = '5px';
-      element.style.alignItems = 'center';
-      element.style.maxWidth = '430px';
+      element.style.borderRadius = '0.9em';
+      element.style.margin = "10px";
 
       const content = document.createElement('popup-' + i);
-      content.innerHTML = "<div class='wrapper'>" + polyEntry.name + "</div><br><div class='lore-wrapper'>" + polyEntry.lore + "</div><br>" +
-          "<div class='container'><img src='/img/people/" + polyEntry.image + "' alt='image'></div>";
+      content.style.display = 'flex';
+
+      // content.innerHTML = "<div class='wrapper'>" + polyEntry.name + "</div><br><div class='lore-wrapper'>" + polyEntry.lore + "</div><br>" +
+      //     "<div class='container'><img src='/img/people/" + polyEntry.image + "' alt='image'></div>";
+      content.innerHTML = "<div class='holder-base'><div class='name-wrapper'>" + polyEntry.name + "</div>" +
+          "<div class='container'><img src='/img/people/" + polyEntry.image + "' alt='image'></div>" +
+          "</div><div class='holder-info'><div class='lore-wrapper'>" + polyEntry.lore + "</div></div>"
       element.appendChild(content);
 
       const overlay = new Overlay({
