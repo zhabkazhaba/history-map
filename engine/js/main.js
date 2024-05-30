@@ -260,3 +260,24 @@ button.addEventListener('click', function () {
 });
 
 document.getElementById('map').appendChild(button);
+
+var modal = document.getElementById("myModal");
+var btn = document.getElementById("okButton");
+var mapel = document.getElementById("map");
+
+btn.onclick = function() {
+    modal.style.display = "none";
+    mapel.style.filter = "blur(0px)";
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+        mapel.style.filter = "blur(0px)";
+    }
+}
+
+window.onload = function() {
+    modal.style.display = "block";
+    mapel.style.filter = "blur(5px)";
+}
