@@ -67,6 +67,7 @@ try {
     const polyEntry = data[i];
     const zoneFeatures = [];
     const overlays = [];
+    const index = polyEntry["z-index"] === undefined ? 50 : polyEntry["z-index"];
     for (let j = 0; j < polyEntry.data.length; ++j) {
       const feature = new Feature({
         geometry: new Polygon([
@@ -115,6 +116,7 @@ try {
 
     const vectorLayer = new VectorLayer({
       source: vectorSource,
+      zIndex: index
     });
 
     map.addLayer(vectorLayer);
@@ -143,7 +145,7 @@ try {
           let stroke = zoneFeature.getStyle().getStroke();
           stroke.setColor(glowing ? "#FFFFFF" : polyEntry.color.toString());
           stroke.setWidth(glowing ? 2.5 : 1.75);
-          vectorLayer.setZIndex(glowing ? 1 : 0);
+          vectorLayer.setZIndex(glowing ? 100 : index);
           map.redrawText();
         }
       }
