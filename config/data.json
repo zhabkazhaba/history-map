@@ -4989,6 +4989,7 @@
     {
         "name": "Розовое Ванино",
         "color": "#FFC0CB",
+        "z-index": 5,
         "lore": "there is no lore",
         "image": "itelmeni.jpg",
         "data": [
