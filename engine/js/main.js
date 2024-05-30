@@ -81,10 +81,10 @@ try {
       element.style.border = '1px solid black';
       element.style.borderRadius = '5px';
       element.style.alignItems = 'center';
-      element.style.maxWidth = '360px';
+      element.style.maxWidth = '400px';
 
       const content = document.createElement('popup-' + i);
-      content.innerHTML = "<div class='wrapper'>" + polyEntry.name + "</div><br>" + polyEntry.lore + "<br>" +
+      content.innerHTML = "<div class='wrapper'>" + polyEntry.name + "</div><br><div class='lore-wrapper'>" + polyEntry.lore + "</div><br>" +
           "<div class='container'><img src='/img/people/" + polyEntry.image + "' alt='image'></div>";
       element.appendChild(content);
 

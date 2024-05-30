@@ -71,13 +71,13 @@ html, body {
 }
 
 .container {
-    width: 210px;
-    height: 210px;
+    width: 160px;
+    height: 160px;
     overflow: hidden;
     position: relative;
     display: flex;
     justify-content: center;
-    align-items: center;
+    flex: 1;
 }
 
 .container img {
@@ -91,4 +91,11 @@ html, body {
     font-weight: bold;
     font-size: 110%;
     text-align: center;
+}
+
+.lore-wrapper {
+    text-align: center;
+    border-radius: 1em;
+    padding: 0 20px 20px;
+    border: 1px solid #363434;
 }
