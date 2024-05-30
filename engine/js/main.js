@@ -9,6 +9,7 @@ import ImageStatic from 'ol/source/ImageStatic';
 import {Polygon} from "ol/geom.js";
 import {loadJSON} from './json-loader.js'
 import {Fill, Stroke, Style} from "ol/style.js";
+import {defaults as defaultInteractions} from 'ol/interaction';
 
 const imageExtent = [-180, -90, 180, 90];
 
@@ -43,6 +44,7 @@ const imageLayerHover = new ImageLayer({
 
 const map = new Map({
   target: 'map',
+  interactions: defaultInteractions({autoPan: false}),
   layers: [
     imageLayer,
     imageLayerHigh,
@@ -85,6 +87,8 @@ try {
         })
       }));
       zoneFeatures.push(feature);
+
+      // Get y coordinate of the mouse pointer
 
       const element = document.createElement('div');
       element.style.backgroundColor = 'white';
@@ -132,6 +136,20 @@ try {
           overlays[i].setPosition(event.coordinate);
           overlays[i].setVisible(true);
           glowPiece = true;
+          //Get y coordinate of mouse pointer
+          const y = event.pixel[1];
+          const overlayHeight = overlays[i].element.offsetHeight;
+          let heightOffset = 0;
+
+          if ((overlayHeight / 2) > y) {
+            heightOffset = (overlayHeight / 2) - y;
+          } else if (y > (map.getSize()[1] - (overlayHeight / 2))) {
+            heightOffset = (map.getSize()[1] - y) - (overlayHeight / 2);
+          } else {
+            heightOffset = 0;
+          }
+          overlays[i].setOffset([20, heightOffset]);
+          console.log(y, " ", heightOffset);
         } else {
           overlays[i].setPosition(undefined);
           overlays[i].setVisible(false);
