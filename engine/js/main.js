@@ -75,7 +75,7 @@ try {
 
       const element = document.createElement('div');
       //set cyan
-      element.style.backgroundColor = '#E2F5F4EE';
+      element.style.backgroundColor = '#E2F5F4CC';
       element.style.padding = '14px';
       element.style.border = '1px solid black';
       element.style.borderRadius = '0.9em';
