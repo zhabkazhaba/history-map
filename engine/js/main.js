@@ -80,11 +80,11 @@ try {
       element.style.border = '1px solid black';
       element.style.borderRadius = '5px';
       element.style.alignItems = 'center';
-      element.style.maxWidth = '300px';
+      element.style.maxWidth = '320px';
 
       const content = document.createElement('popup-' + i);
-      content.innerHTML = polyEntry.name + "<br>" + polyEntry.lore + "<br>" + "<img src='/img/people/"
-          + polyEntry.image + "' alt='image' style='width: 100px; height: 100px;'>";
+      content.innerHTML = "<div class='wrapper'>" + polyEntry.name + "<br>" + polyEntry.lore + "<br>" +
+          "<div class='container'><img src='/img/people/" + polyEntry.image + "' alt='image'></div></div>";
       element.appendChild(content);
 
       const overlay = new Overlay({
