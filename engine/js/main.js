@@ -44,7 +44,6 @@ const imageLayerHover = new ImageLayer({
 
 const map = new Map({
   target: 'map',
-  interactions: defaultInteractions({autoPan: false}),
   layers: [
     imageLayer,
     imageLayerHigh,
@@ -104,7 +103,7 @@ try {
 
       const overlay = new Overlay({
         element: element,
-        autoPan: true,
+        autoPan: false,
         positioning: 'center-left',
         offset: [20, 0],
       });
@@ -268,7 +267,7 @@ btn.onclick = function() {
 }
 
 window.onclick = function(event) {
-    if (event.target == modal) {
+    if (event.target === modal) {
         modal.style.display = "none";
         mapel.style.filter = "blur(0px)";
     }
