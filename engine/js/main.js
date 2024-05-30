@@ -81,7 +81,7 @@ try {
       element.style.border = '1px solid black';
       element.style.borderRadius = '5px';
       element.style.alignItems = 'center';
-      element.style.maxWidth = '400px';
+      element.style.maxWidth = '430px';
 
       const content = document.createElement('popup-' + i);
       content.innerHTML = "<div class='wrapper'>" + polyEntry.name + "</div><br><div class='lore-wrapper'>" + polyEntry.lore + "</div><br>" +
