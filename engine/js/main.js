@@ -73,8 +73,6 @@ try {
       }));
       zoneFeatures.push(feature);
 
-      // Get y coordinate of the mouse pointer
-
       const element = document.createElement('div');
       element.style.backgroundColor = 'white';
       element.style.display = 'inline-block';
@@ -121,7 +119,7 @@ try {
           overlays[i].setPosition(event.coordinate);
           overlays[i].setVisible(true);
           glowPiece = true;
-          //Get y coordinate of mouse pointer
+
           const y = event.pixel[1];
           const overlayHeight = overlays[i].element.offsetHeight;
           let heightOffset = 0;
@@ -134,7 +132,6 @@ try {
             heightOffset = 0;
           }
           overlays[i].setOffset([20, heightOffset]);
-          console.log(y, " ", heightOffset);
         } else {
           overlays[i].setPosition(undefined);
           overlays[i].setVisible(false);
