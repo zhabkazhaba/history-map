@@ -121,6 +121,15 @@ try {
           overlays[i].setVisible(true);
           glowPiece = true;
 
+          const x = event.pixel[0];
+          let widthOffset = 0;
+          if (x > (map.getSize()[0] / 2)) {
+            widthOffset = -20;
+            overlays[i].setPositioning('center-right');
+          } else {
+            widthOffset = 20;
+            overlays[i].setPositioning('center-left');
+          }
           const y = event.pixel[1];
           const overlayHeight = overlays[i].element.offsetHeight;
           let heightOffset = 0;
@@ -132,7 +141,9 @@ try {
           } else {
             heightOffset = 0;
           }
-          overlays[i].setOffset([20, heightOffset]);
+          overlays[i].setOffset([widthOffset, heightOffset]);
+
+
         } else {
           overlays[i].setPosition(undefined);
           overlays[i].setVisible(false);
