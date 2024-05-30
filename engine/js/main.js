@@ -9,6 +9,7 @@ import ImageStatic from 'ol/source/ImageStatic';
 import {Polygon} from "ol/geom.js";
 import {loadJSON} from './json-loader.js'
 import {Fill, Stroke, Style} from "ol/style.js";
+import {defaults as defaultInteractions} from 'ol/interaction';
 
 const imageExtent = [-180, -90, 180, 90];
 
@@ -28,14 +29,6 @@ const imageLayerHigh = new ImageLayer({
   }),
 });
 
-const imageLayerHover = new ImageLayer({
-  source: new ImageStatic({
-    url: '/img/base/map2_hover.jpg',
-    imageExtent: imageExtent,
-    projection: 'EPSG:4326'
-  }),
-});
-
 (async () => {
   await new Promise(resolve => setTimeout(resolve, 250));
   imageLayerHigh.setVisible(false);
@@ -43,23 +36,18 @@ const imageLayerHover = new ImageLayer({
 
 const map = new Map({
   target: 'map',
+  interactions: defaultInteractions({autoPan: false}),
   layers: [
     imageLayer,
-    imageLayerHigh,
-    imageLayerHover
+    imageLayerHigh
   ],
   view: new View({
     center: [0, 0],
     zoom: 2,
-    projection: 'EPSG:4326'
+    projection: 'EPSG:4326',
+    extent: imageExtent
   })
 });
-
-const button = document.createElement('button');
-button.innerHTML = 'Change map image';
-button.style.position = 'absolute';
-button.style.top = '10px';
-button.style.right = '10px';
 
 try {
   const data = await loadJSON('/config/data.json');
@@ -133,6 +121,19 @@ try {
           overlays[i].setPosition(event.coordinate);
           overlays[i].setVisible(true);
           glowPiece = true;
+
+          const y = event.pixel[1];
+          const overlayHeight = overlays[i].element.offsetHeight;
+          let heightOffset = 0;
+
+          if ((overlayHeight / 2) > y) {
+            heightOffset = (overlayHeight / 2) - y;
+          } else if (y > (map.getSize()[1] - (overlayHeight / 2))) {
+            heightOffset = (map.getSize()[1] - y) - (overlayHeight / 2);
+          } else {
+            heightOffset = 0;
+          }
+          overlays[i].setOffset([20, heightOffset]);
         } else {
           overlays[i].setPosition(undefined);
           overlays[i].setVisible(false);
@@ -192,54 +193,54 @@ map.on(['moveend'], function () {
   stateZoomActive = false;
 });
 
-const poly = new Polygon([
-    [0, 0]
-]);
-const source = new VectorSource({
-  features: [new Feature({
-    geometry: poly
-  })],
-});
-const layer = new VectorLayer({
-  source: source,
-});
-map.addLayer(layer);
+// const poly = new Polygon([
+//     [0, 0]
+// ]);
+// const source = new VectorSource({
+//   features: [new Feature({
+//     geometry: poly
+//   })],
+// });
+// const layer = new VectorLayer({
+//   source: source,
+// });
+// map.addLayer(layer);
+//
+// let data = "";
+// map.on(['click'], function (event) {
+//   let piece = map.getCoordinateFromPixel(event.pixel);
+//
+//   let coordinates = data === "" ? [] : poly.getCoordinates()[0];
+//   coordinates.push(piece);
+//   poly.setCoordinates([coordinates]);
+//   source.changed();
+//
+//   piece = "[" + piece[0] + ", " + piece[1] + "]";
+//   if (data === "") {
+//     data = piece;
+//   } else {
+//     data = data + ",\n" + piece;
+//   }
+//   console.log(data);
+// });
 
-let data = "";
-map.on(['click'], function (event) {
-  let piece = map.getCoordinateFromPixel(event.pixel);
+var modal = document.getElementById("myModal");
+var btn = document.getElementById("okButton");
+var mapel = document.getElementById("map");
 
-  let coordinates = data === "" ? [] : poly.getCoordinates()[0];
-  coordinates.push(piece);
-  poly.setCoordinates([coordinates]);
-  source.changed();
+btn.onclick = function() {
+    modal.style.display = "none";
+    mapel.style.filter = "blur(0px)";
+}
 
-  piece = "[" + piece[0] + ", " + piece[1] + "]";
-  if (data === "") {
-    data = piece;
-  } else {
-    data = data + ",\n" + piece;
-  }
-  console.log(data);
-});
-let hover_state = true;
-button.addEventListener('click', function () {
-  if (hover_state) {
-    if (stateHighRes) {
-      imageLayerHigh.setVisible(true);
-      imageLayer.setVisible(false);
-    } else {
-      imageLayerHigh.setVisible(false);
-      imageLayer.setVisible(true);
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+        mapel.style.filter = "blur(0px)";
     }
-    imageLayerHover.setVisible(false);
-    hover_state = false;
-  } else {
-    imageLayer.setVisible(false);
-    imageLayerHigh.setVisible(false);
-    imageLayerHover.setVisible(true);
-    hover_state = true;
-  }
-});
+}
 
-document.getElementById('map').appendChild(button);
+window.onload = function() {
+    modal.style.display = "block";
+    mapel.style.filter = "blur(5px)";
+}
