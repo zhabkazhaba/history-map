@@ -82,13 +82,18 @@ try {
       element.style.margin = "10px";
 
       const content = document.createElement('popup-' + i);
-      content.style.display = 'flex';
 
       // content.innerHTML = "<div class='wrapper'>" + polyEntry.name + "</div><br><div class='lore-wrapper'>" + polyEntry.lore + "</div><br>" +
       //     "<div class='container'><img src='/img/people/" + polyEntry.image + "' alt='image'></div>";
-      content.innerHTML = "<div class='holder-base'><div class='name-wrapper'>" + polyEntry.name + "</div>" +
+      content.innerHTML = "<div class='holder-parent'><div class='holder-topper'><div class='holder-base'><div class='name-wrapper'>" + polyEntry.name + "</div>" +
           "<div class='container'><img src='/img/people/" + polyEntry.image + "' alt='image'></div>" +
-          "</div><div class='holder-info'><div class='lore-wrapper'>" + polyEntry.lore + "</div></div>"
+          "<div class='info-bar'><div class='data-title'>Группа:</div><div class='data-piece'>" + polyEntry.group +
+          "</div><div class='data-title'>Население:</div><div class='data-piece'>" + polyEntry.population +
+          "</div><div class='data-title'>Век появления:</div><div class='data-piece'>" + polyEntry.foundation + "</div>" +
+          "<div class='warning'><b>Важно:</b> числовые данные являются примерными</div></div>" +
+          "</div><div class='holder-info'><div class='lore-wrapper'>" + polyEntry.lore + "</div></div></div>" +
+          "</div><div class='holder-source'><div><b>Источник:</b> " + polyEntry.source +
+          "</div><div class='click-to-go'>Нажмите, чтобы перейти</div></div>"
       element.appendChild(content);
 
       const overlay = new Overlay({
@@ -113,6 +118,18 @@ try {
     map.addLayer(vectorLayer);
 
     let glowing = false;
+    map.on(['singleclick'], function (event) {
+      const featureAtPixel = map.forEachFeatureAtPixel(event.pixel, function(featureAtPixel) {
+        return featureAtPixel;
+      });
+
+      for (let i = 0; i < zoneFeatures.length; ++i) {
+        if (zoneFeatures[i] === featureAtPixel) {
+          window.open(polyEntry.source, '_blank').focus();
+          break;
+        }
+      }
+    });
     map.on(['click', 'pointermove'], function(event) {
       const featureAtPixel = map.forEachFeatureAtPixel(event.pixel, function(featureAtPixel) {
         return featureAtPixel;
