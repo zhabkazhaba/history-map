@@ -71,7 +71,8 @@ html, body {
 }
 
 .github {
-    padding-top: 20px;
+    padding-top: 25px;
+    padding-bottom: 15px;
     font-family: monospace;
     font-size: 20px;
 
@@ -88,6 +89,14 @@ html, body {
     a {
         padding: 1px;
     }
+}
+
+.map-source {
+    margin-top: 5px;
+    margin-bottom: -5px;
+
+    font-family: monospace;
+    font-size: 15px;
 }
 
 .container {

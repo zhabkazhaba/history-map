@@ -73,6 +73,11 @@ try {
       }));
       zoneFeatures.push(feature);
 
+      if (polyEntry.source === undefined) {
+        console.error("Inconsistent data error");
+      }
+      polyEntry.population = Math.round(polyEntry.population / 50) * 50;
+
       const element = document.createElement('div');
       //set cyan
       element.style.backgroundColor = '#E2F5F4CC';
